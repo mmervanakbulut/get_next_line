@@ -1,3 +1,96 @@
+# Get Next Line
+
+A C function that reads a text file line by line, using static variables to maintain state between function calls.
+
+## 📋 Project Overview
+
+**get_next_line** reads one line at a time from a file descriptor, making it memory-efficient for large files. It uses a static buffer to persist data between calls, ensuring optimal performance.
+
+## 🔧 Function Prototype
+
+```c
+char *get_next_line(int fd);
+```
+
+**Parameters:**
+
+- `fd`: File descriptor to read from
+
+**Return Value:**
+
+- Line read (including `\n` if present)
+- `NULL` when EOF is reached or on error
+
+## 🏗️ Architecture
+
+### Core Functions
+
+- **`get_next_line(fd)`** - Main function that orchestrates the reading process
+- **`ft_read_file(fd, res)`** - Reads from file descriptor until newline or EOF
+- **`ft_line(buffer)`** - Extracts current line from buffer
+- **`ft_next(buffer)`** - Updates buffer with remaining content
+- **`ft_free(buffer, buf)`** - Helper for memory management
+
+### Utility Functions ([get_next_line_utils.c](get_next_line_utils.c))
+
+- `ft_strjoin()` - Concatenates two strings
+- `ft_strchr()` - Locates character in string
+- `ft_calloc()` - Allocates zero-initialized memory
+- `ft_strlen()` - Calculates string length
+- `ft_bzero()` - Sets memory to zero
+
+## 🧠 Static Variables Explained
+
+```c
+static char *buffer;  // Persists between function calls
+```
+
+| Memory Section   | Purpose                                       |
+| ---------------- | --------------------------------------------- |
+| **Stack**        | Local (automatic) variables                   |
+| **Heap**         | Dynamically allocated memory (`malloc`)       |
+| **Data Segment** | `global/static` variables with initial values |
+| **Text**         | Program code                                  |
+
+**Why Static?**
+
+- Maintains state between function calls
+- Avoids global variables (better encapsulation)
+- Memory allocated once, persists until program ends
+
+## 🚀 Compilation & Usage
+
+```bash
+# Compile with custom buffer size
+cc -Wall -Wextra -Werror -D BUFFER_SIZE=42 *.c -o get_next_line
+
+# Test with provided main
+./get_next_line
+```
+
+## 📊 Algorithm Flow
+
+```
+1. Check if fd is valid
+2. Read chunks of BUFFER_SIZE bytes
+3. Store in static buffer until newline found
+4. Extract one line from buffer
+5. Update buffer with remaining content
+6. Return the line (caller must free)
+```
+
+## ⚙️ Key Features
+
+- **Memory Efficient**: Only reads necessary data
+- **Configurable Buffer**: Compile-time BUFFER_SIZE setting
+- **Error Handling**: Robust error checking and cleanup
+- **Line Preservation**: Maintains `\n` characters in output
+- **Multiple FDs**: Each fd maintains its own static buffer
+
+## 🧪 Testing
+
+The project includes a [main.c](main.c) that tests reading from [test.txt](test.txt) line by line, demonstrating the function's capability to handle various line lengths and content.
+
 # Static Variables
 
 | Memory Section   | Purpose                                       |
