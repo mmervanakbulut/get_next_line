@@ -62,10 +62,10 @@ static char *buffer;  // Persists between function calls
 
 ```bash
 # Compile with custom buffer size
-cc -Wall -Wextra -Werror -D BUFFER_SIZE=42 *.c -o get_next_line
+cc -Wall -Wextra -Werror -D BUFFER_SIZE=42 *.c
 
 # Test with provided main
-./get_next_line
+./a.out
 ```
 
 ## 📊 Algorithm Flow
