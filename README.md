@@ -127,3 +127,13 @@ Every time you call `my_function()`, the `counter` at address `0x100` is updated
 - `static` in C allows you to:
   - Persist memory **without global scope**.
   - Avoid memory leaks by not needing `malloc/free`.
+
+# read from a file
+
+```c
+#include <unistd.h>
+ssize_t read(int fildes, void *buf, size_t nbyte);
+```
+
+## return value
+Upon successful completion, read() and pread() shall return a non-negative integer indicating the number of bytes actually read. Otherwise, the functions shall return -1 and set errno to indicate the error.
