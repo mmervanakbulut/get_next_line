@@ -26,8 +26,7 @@ int main(void)
         free(line);
     }
     
-    if (fd != 0)
-        close(fd);
+    close(fd);
     
     printf("\n=== Total lines read: %d ===\n", line_count);
     return (0);

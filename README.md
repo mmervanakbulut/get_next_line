@@ -79,14 +79,6 @@ cc -Wall -Wextra -Werror -D BUFFER_SIZE=42 *.c
 6. Return the line (caller must free)
 ```
 
-## ⚙️ Key Features
-
-- **Memory Efficient**: Only reads necessary data
-- **Configurable Buffer**: Compile-time BUFFER_SIZE setting
-- **Error Handling**: Robust error checking and cleanup
-- **Line Preservation**: Maintains `\n` characters in output
-- **Multiple FDs**: Each fd maintains its own static buffer
-
 ## 🧪 Testing
 
 The project includes a [main.c](main.c) that tests reading from [test.txt](test.txt) line by line, demonstrating the function's capability to handle various line lengths and content.
