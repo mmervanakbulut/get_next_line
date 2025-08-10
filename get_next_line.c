@@ -96,12 +96,6 @@ char	*ft_read_file(int fd, char *res)
 		}
 		buffer[byte_read] = 0;
 		temp = ft_free(res, buffer);
-		if (!temp)
-		{
-			free(buffer);
-			free(res);
-			return (NULL);
-		}
 		res = temp;
 		if (ft_strchr(buffer, '\n'))
 			break ;
