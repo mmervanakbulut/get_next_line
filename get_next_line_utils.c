@@ -43,6 +43,8 @@ char	*ft_strjoin(char const *s1, char const *s2)
 
 char	*ft_strchr(const char *str, int ch)
 {
+	if (!str)
+		return (NULL);
 	while (*str)
 	{
 		if (*str == (char)ch)
@@ -69,6 +71,8 @@ size_t	ft_strlen(const char *str)
 {
 	int	counter;
 
+	if (!str)
+		return (0);
 	counter = 0;
 	while (str[counter] != '\0')
 	{
