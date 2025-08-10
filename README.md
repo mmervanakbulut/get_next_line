@@ -62,10 +62,10 @@ static char *buffer;  // Persists between function calls
 
 ```bash
 # Compile with custom buffer size
-cc -Wall -Wextra -Werror -D BUFFER_SIZE=42 *.c -o get_next_line
+cc -Wall -Wextra -Werror -D BUFFER_SIZE=42 *.c
 
 # Test with provided main
-./get_next_line
+./a.out
 ```
 
 ## 📊 Algorithm Flow
@@ -78,14 +78,6 @@ cc -Wall -Wextra -Werror -D BUFFER_SIZE=42 *.c -o get_next_line
 5. Update buffer with remaining content
 6. Return the line (caller must free)
 ```
-
-## ⚙️ Key Features
-
-- **Memory Efficient**: Only reads necessary data
-- **Configurable Buffer**: Compile-time BUFFER_SIZE setting
-- **Error Handling**: Robust error checking and cleanup
-- **Line Preservation**: Maintains `\n` characters in output
-- **Multiple FDs**: Each fd maintains its own static buffer
 
 ## 🧪 Testing
 
@@ -127,3 +119,13 @@ Every time you call `my_function()`, the `counter` at address `0x100` is updated
 - `static` in C allows you to:
   - Persist memory **without global scope**.
   - Avoid memory leaks by not needing `malloc/free`.
+
+# read from a file
+
+```c
+#include <unistd.h>
+ssize_t read(int fildes, void *buf, size_t nbyte);
+```
+
+## return value
+Upon successful completion, read() and pread() shall return a non-negative integer indicating the number of bytes actually read. Otherwise, the functions shall return -1 and set errno to indicate the error.

@@ -12,6 +12,34 @@
 
 #include "get_next_line.h"
 
+void	ft_bzero(void *s, size_t n)
+{
+	unsigned char	*dst;
+	size_t			i;
+
+	if (!s)
+		return ;
+	dst = (unsigned char *)s;
+	i = 0;
+	while (i < n)
+	{
+		dst[i] = '\0';
+		i++;
+	}
+}
+
+size_t	ft_strlen(const char *str)
+{
+	int	counter;
+
+	counter = 0;
+	while (str[counter] != '\0')
+	{
+		counter++;
+	}
+	return (counter);
+}
+
 char	*ft_strjoin(char const *s1, char const *s2)
 {
 	char	*joined;
@@ -71,8 +99,6 @@ size_t	ft_strlen(const char *str)
 {
 	int	counter;
 
-	if (!str)
-		return (0);
 	counter = 0;
 	while (str[counter] != '\0')
 	{

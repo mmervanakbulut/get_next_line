@@ -6,7 +6,7 @@
 /*   By: musakbul <musakbul@student.42istanbul.c    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/27 16:24:54 by musakbul          #+#    #+#             */
-/*   Updated: 2025/07/27 16:24:54 by musakbul         ###   ########.fr       */
+/*   Updated: 2025/08/01 14:06:10 by musakbul         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -104,7 +104,7 @@ char	*ft_read_file(int fd, char *res)
 		}
 		res = temp;
 		if (ft_strchr(buffer, '\n'))
-			break;
+			break ;
 	}
 	free(buffer);
 	return (res);
@@ -115,12 +115,17 @@ char	*get_next_line(int fd)
 	static char	*buffer;
 	char		*line;
 
-	if (fd < 0 || BUFFER_SIZE <= 0 || read(fd, 0, 0) < 0)
+	if (fd < 0 || BUFFER_SIZE <= 0)
 		return (NULL);
 	buffer = ft_read_file(fd, buffer);
 	if (!buffer)
 		return (NULL);
 	line = ft_line(buffer);
 	buffer = ft_next(buffer);
+	if (!line)
+	{
+		free(buffer);
+		buffer = NULL;
+	}
 	return (line);
 }
