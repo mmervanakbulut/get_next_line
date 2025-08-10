@@ -12,115 +12,114 @@
 
 #include "get_next_line.h"
 
-void	ft_bzero(void *s, size_t n)
+char	*ft_free(char *buffer, char *buf)
 {
-	unsigned char	*dst;
-	size_t			i;
+    char	*temp;
 
-	if (!s)
-		return ;
-	dst = (unsigned char *)s;
-	i = 0;
-	while (i < n)
-	{
-		dst[i] = '\0';
-		i++;
-	}
+    temp = ft_strjoin(buffer, buf);
+    free(buffer);
+    return (temp);
 }
 
-size_t	ft_strlen(const char *str)
+char	*ft_next(char *buffer)
 {
-	int	counter;
+    int		i;
+    int		j;
+    char	*line;
 
-	counter = 0;
-	while (str[counter] != '\0')
-	{
-		counter++;
-	}
-	return (counter);
+    i = 0;
+    j = 0;
+    while (buffer[i] && buffer[i] != '\n')
+        i++;
+    if (!buffer[i])
+    {
+        free(buffer);
+        return (NULL);
+    }
+    line = ft_calloc((ft_strlen(buffer) - i + 1), sizeof(char));
+    if (!line)
+    {
+        free(buffer);
+        return (NULL);
+    }
+    i++;
+    while (buffer[i])
+        line[j++] = buffer[i++];
+    free(buffer);
+    return (line);
 }
 
-char	*ft_strjoin(char const *s1, char const *s2)
+char	*ft_line(char *buffer)
 {
-	char	*joined;
-	size_t	len1;
-	size_t	len2;
-	size_t	i;
+    char	*line;
+    int		i;
 
-	if (!s1 && !s2)
-		return (NULL);
-	len1 = ft_strlen(s1);
-	len2 = ft_strlen(s2);
-	joined = (char *)malloc(len1 + len2 + 1);
-	if (!joined)
-		return (NULL);
-	i = 0;
-	while (i < len1)
-	{
-		joined[i] = s1[i];
-		i++;
-	}
-	while (i < len1 + len2)
-	{
-		joined[i] = s2[i - len1];
-		i++;
-	}
-	joined[i] = '\0';
-	return (joined);
+    i = 0;
+    if (!buffer[i])
+        return (NULL);
+    while (buffer[i] && buffer[i] != '\n')
+        i++;
+    line = ft_calloc(i + 2, sizeof(char));
+    if (!line)
+        return (NULL);
+    i = 0;
+    while (buffer[i] && buffer[i] != '\n')
+    {
+        line[i] = buffer[i];
+        i++;
+    }
+    if (buffer[i] && buffer[i] == '\n')
+        line[i++] = '\n';
+    return (line);
 }
 
-char	*ft_strchr(const char *str, int ch)
+char	*ft_read_file(int fd, char *res)
 {
-	if (!str)
-		return (NULL);
-	while (*str)
-	{
-		if (*str == (char)ch)
-			return ((char *)str);
-		str++;
-	}
-	if ((char)ch == '\0')
-		return ((char *)str);
-	return (NULL);
+    char	*buffer;
+    int		byte_read;
+    char	*temp;
+
+    if (!res)
+        res = ft_calloc(1, 1);
+    buffer = ft_calloc(BUFFER_SIZE + 1, sizeof(char));
+    if (!buffer)
+        return (NULL);
+    byte_read = 1;
+    while (byte_read > 0)
+    {
+        byte_read = read(fd, buffer, BUFFER_SIZE);
+        if (byte_read == -1)
+        {
+            free(buffer);
+            free(res);
+            return (NULL);
+        }
+        buffer[byte_read] = 0;
+        temp = ft_free(res, buffer);
+        res = temp;
+        if (ft_strchr(buffer, '\n'))
+            break ;
+    }
+    free(buffer);
+    return (res);
 }
 
-void	*ft_calloc(size_t nmemb, size_t size)
+char	*get_next_line(int fd)
 {
-	unsigned char	*ptr;
+    static char	*buffer;
+    char		*line;
 
-	ptr = (unsigned char *)malloc(nmemb * size);
-	if (!ptr)
-		return (NULL);
-	ft_bzero(ptr, nmemb * size);
-	return (ptr);
-}
-
-size_t	ft_strlen(const char *str)
-{
-	int	counter;
-
-	if (!str)
-		return (0);
-	counter = 0;
-	while (str[counter] != '\0')
-	{
-		counter++;
-	}
-	return (counter);
-}
-
-void	ft_bzero(void *s, size_t n)
-{
-	unsigned char	*dst;
-	size_t			i;
-
-	if (!s)
-		return ;
-	dst = (unsigned char *)s;
-	i = 0;
-	while (i < n)
-	{
-		dst[i] = '\0';
-		i++;
-	}
+    if (fd < 0 || BUFFER_SIZE <= 0)
+        return (NULL);
+    buffer = ft_read_file(fd, buffer);
+    if (!buffer)
+        return (NULL);
+    line = ft_line(buffer);
+    buffer = ft_next(buffer);
+    if (!line)
+    {
+        free(buffer);
+        buffer = NULL;
+    }
+    return (line);
 }
