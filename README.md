@@ -23,13 +23,12 @@ char *get_next_line(int fd);
 
 ## 🏗️ Architecture
 
-### Core Functions
+### Core Functions ([get_next_line.c](get_next_line.c))
 
 - **`get_next_line(fd)`** - Main function that orchestrates the reading process
-- **`ft_read_file(fd, res)`** - Reads from file descriptor until newline or EOF
-- **`ft_line(buffer)`** - Extracts current line from buffer
-- **`ft_next(buffer)`** - Updates buffer with remaining content
-- **`ft_free(buffer, buf)`** - Helper for memory management
+- **`read_and_append(fd, buffer)`** - Reads from file descriptor until newline or EOF
+- **`extract_line(buffer)`** - Extracts current line from buffer
+- **`update_buffer(buffer)`** - Updates buffer with remaining content after newline
 
 ### Utility Functions ([get_next_line_utils.c](get_next_line_utils.c))
 
@@ -38,25 +37,6 @@ char *get_next_line(int fd);
 - `ft_calloc()` - Allocates zero-initialized memory
 - `ft_strlen()` - Calculates string length
 - `ft_bzero()` - Sets memory to zero
-
-## 🧠 Static Variables Explained
-
-```c
-static char *buffer;  // Persists between function calls
-```
-
-| Memory Section   | Purpose                                       |
-| ---------------- | --------------------------------------------- |
-| **Stack**        | Local (automatic) variables                   |
-| **Heap**         | Dynamically allocated memory (`malloc`)       |
-| **Data Segment** | `global/static` variables with initial values |
-| **Text**         | Program code                                  |
-
-**Why Static?**
-
-- Maintains state between function calls
-- Avoids global variables (better encapsulation)
-- Memory allocated once, persists until program ends
 
 ## 🚀 Compilation & Usage
 
@@ -71,19 +51,42 @@ cc -Wall -Wextra -Werror -D BUFFER_SIZE=42 *.c
 ## 📊 Algorithm Flow
 
 ```
-1. Check if fd is valid
-2. Read chunks of BUFFER_SIZE bytes
-3. Store in static buffer until newline found
-4. Extract one line from buffer
-5. Update buffer with remaining content
+1. Check if fd is valid and BUFFER_SIZE > 0
+2. Initialize static buffer if NULL
+3. read_and_append(): Read chunks of BUFFER_SIZE bytes until newline
+4. extract_line(): Extract one line from buffer (including \n)
+5. update_buffer(): Remove extracted line, keep remainder
 6. Return the line (caller must free)
 ```
 
-## 🧪 Testing
+## 🔧 Function Details
 
-The project includes a [main.c](main.c) that tests reading from [test.txt](test.txt) line by line, demonstrating the function's capability to handle various line lengths and content.
+### `read_and_append()`
+
+- Reads from file descriptor in BUFFER_SIZE chunks
+- Concatenates data using [`ft_strjoin()`](get_next_line_utils.c)
+- Stops when newline is found or EOF reached
+- Returns updated buffer
+
+### `extract_line()`
+
+- Finds newline position in buffer
+- Allocates memory for line (including newline)
+- Copies characters up to and including newline
+- Returns the extracted line
+
+### `update_buffer()`
+
+- Removes the extracted line from buffer
+- Keeps remaining data after newline
+- Frees old buffer, returns new buffer
+- Returns NULL if no data remains
 
 # Static Variables
+
+```c
+static char *buffer;  // Persists between function calls
+```
 
 | Memory Section   | Purpose                                       |
 | ---------------- | --------------------------------------------- |
@@ -128,4 +131,5 @@ ssize_t read(int fildes, void *buf, size_t nbyte);
 ```
 
 ## return value
+
 Upon successful completion, read() and pread() shall return a non-negative integer indicating the number of bytes actually read. Otherwise, the functions shall return -1 and set errno to indicate the error.

@@ -13,7 +13,7 @@
 #include "get_next_line.h"
 
 #ifndef BUFFER_SIZE
-# define BUFFER_SIZE 1024
+# define BUFFER_SIZE 3
 #endif
 
 static char	*read_and_append(int fd, char *buffer)
@@ -38,6 +38,7 @@ static char	*read_and_append(int fd, char *buffer)
 		new_buffer = ft_strjoin(buffer, temp_buffer);
 		free(buffer);
 		buffer = new_buffer;
+		printf("buffer in read and append => %s\n", buffer);
 	}
 	free(temp_buffer);
 	return (buffer);
@@ -62,6 +63,7 @@ static char	*extract_line(char *buffer)
 	while (buffer[i] && buffer[i] != '\n')
 	{
 		line[i] = buffer[i];
+		printf("line in extract line => %s\n", line);
 		i++;
 	}
 	if (buffer[i] == '\n')
