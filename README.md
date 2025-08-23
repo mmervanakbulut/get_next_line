@@ -26,9 +26,9 @@ char *get_next_line(int fd);
 ### Core Functions ([get_next_line.c](get_next_line.c))
 
 - **`get_next_line(fd)`** - Main function that orchestrates the reading process
-- **`read_and_append(fd, buffer)`** - Reads from file descriptor until newline or EOF
-- **`extract_line(buffer)`** - Extracts current line from buffer
-- **`update_buffer(buffer)`** - Updates buffer with remaining content after newline
+- **`ft_read_and_append(fd, buffer)`** - Reads from file descriptor until newline or EOF
+- **`ft_extract_line(buffer)`** - Extracts current line from buffer
+- **`ft_update_buffer(buffer)`** - Updates buffer with remaining content after newline
 
 ### Utility Functions ([get_next_line_utils.c](get_next_line_utils.c))
 
@@ -53,29 +53,29 @@ cc -Wall -Wextra -Werror -D BUFFER_SIZE=42 *.c
 ```
 1. Check if fd is valid and BUFFER_SIZE > 0
 2. Initialize static buffer if NULL
-3. read_and_append(): Read chunks of BUFFER_SIZE bytes until newline
-4. extract_line(): Extract one line from buffer (including \n)
-5. update_buffer(): Remove extracted line, keep remainder
+3. ft_read_and_append(): Read chunks of BUFFER_SIZE bytes until newline
+4. ft_extract_line(): Extract one line from buffer (including \n)
+5. ft_update_buffer(): Remove extracted line, keep remainder
 6. Return the line (caller must free)
 ```
 
 ## 🔧 Function Details
 
-### `read_and_append()`
+### `ft_read_and_append()`
 
 - Reads from file descriptor in BUFFER_SIZE chunks
 - Concatenates data using [`ft_strjoin()`](get_next_line_utils.c)
 - Stops when newline is found or EOF reached
 - Returns updated buffer
 
-### `extract_line()`
+### `ft_extract_line()`
 
 - Finds newline position in buffer
 - Allocates memory for line (including newline)
 - Copies characters up to and including newline
 - Returns the extracted line
 
-### `update_buffer()`
+### `ft_update_buffer()`
 
 - Removes the extracted line from buffer
 - Keeps remaining data after newline
