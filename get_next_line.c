@@ -6,13 +6,17 @@
 /*   By: musakbul <musakbul@student.42istanbul.c    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/27 16:24:54 by musakbul          #+#    #+#             */
-/*   Updated: 2025/08/01 14:06:10 by musakbul         ###   ########.fr       */
+/*   Updated: 2025/08/23 13:35:52 by musakbul         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "get_next_line.h"
 
-static char	*read_and_append(int fd, char *buffer)
+#ifndef BUFFER_SIZE
+# define BUFFER_SIZE 3
+#endif
+
+static char	*ft_read_and_append(int fd, char *buffer)
 {
 	char	*temp_buffer;
 	char	*new_buffer;
@@ -39,7 +43,7 @@ static char	*read_and_append(int fd, char *buffer)
 	return (buffer);
 }
 
-static char	*extract_line(char *buffer)
+static char	*ft_extract_line(char *buffer)
 {
 	char	*line;
 	int		i;
@@ -63,7 +67,7 @@ static char	*extract_line(char *buffer)
 	return (line);
 }
 
-static char	*update_buffer(char *buffer)
+static char	*ft_update_buffer(char *buffer)
 {
 	char	*new_buffer;
 	int		i;
@@ -97,10 +101,10 @@ char	*get_next_line(int fd)
 		return (NULL);
 	if (!buffer)
 		buffer = ft_calloc(1, 1);
-	buffer = read_and_append(fd, buffer);
+	buffer = ft_read_and_append(fd, buffer);
 	if (!buffer)
 		return (NULL);
-	line = extract_line(buffer);
-	buffer = update_buffer(buffer);
+	line = ft_extract_line(buffer);
+	buffer = ft_update_buffer(buffer);
 	return (line);
 }
