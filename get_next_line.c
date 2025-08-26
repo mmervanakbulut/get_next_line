@@ -12,10 +12,6 @@
 
 #include "get_next_line.h"
 
-#ifndef BUFFER_SIZE
-# define BUFFER_SIZE 3
-#endif
-
 static char	*ft_read_and_append(int fd, char *buffer)
 {
 	char	*temp_buffer;
