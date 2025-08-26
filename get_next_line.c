@@ -12,10 +12,6 @@
 
 #include "get_next_line.h"
 
-#ifndef BUFFER_SIZE
-# define BUFFER_SIZE 3
-#endif
-
 static char	*read_and_append(int fd, char *buffer)
 {
 	char	*temp_buffer;
@@ -26,7 +22,7 @@ static char	*read_and_append(int fd, char *buffer)
 	if (!temp_buffer)
 		return (NULL);
 	bytes_read = 1;
-	while (bytes_read > 0 && !ft_strchr(buffer, '\n'))
+	while (bytes_read > 0 && !ft_strchr(buffer, '\n')) // => buffer \n içeriyor mu? okunan byte 0'dan büyük mü?
 	{
 		bytes_read = read(fd, temp_buffer, BUFFER_SIZE);
 		if (bytes_read == -1)
@@ -35,10 +31,9 @@ static char	*read_and_append(int fd, char *buffer)
 			return (NULL);
 		}
 		temp_buffer[bytes_read] = '\0';
-		new_buffer = ft_strjoin(buffer, temp_buffer);
+		new_buffer = ft_strjoin(buffer, temp_buffer); // burada temp_buffer ile önceki buffer birleştiriliyor ve new_buffer'a atanıyor
 		free(buffer);
-		buffer = new_buffer;
-		printf("buffer in read and append => %s\n", buffer);
+		buffer = new_buffer; // buffer güncelleniyor ve değişmiyor
 	}
 	free(temp_buffer);
 	return (buffer);
@@ -49,21 +44,18 @@ static char	*extract_line(char *buffer)
 	char	*line;
 	int		i;
 
-	if (!buffer || !buffer[0])
-		return (NULL);
 	i = 0;
-	while (buffer[i] && buffer[i] != '\n')
+	while (buffer[i] && buffer[i] != '\n') // EOF ve \n bulana kadar i artırılıyor
 		i++;
-	if (buffer[i] == '\n')
+	if (buffer[i] == '\n') // \n ise i bir kere daha arttırılıyor
 		i++;
-	line = ft_calloc(i + 1, sizeof(char));
+	line = ft_calloc(i + 1, sizeof(char)); // calloc ile \n + 1 kadar yer ayrılıyor ?????? \0 için tabii
 	if (!line)
 		return (NULL);
 	i = 0;
-	while (buffer[i] && buffer[i] != '\n')
+	while (buffer[i] && buffer[i] != '\n') // EOF ve \n bulana kadar buffer line'a eşitleiniyor
 	{
 		line[i] = buffer[i];
-		printf("line in extract line => %s\n", line);
 		i++;
 	}
 	if (buffer[i] == '\n')
@@ -80,7 +72,7 @@ static char	*update_buffer(char *buffer)
 	i = 0;
 	while (buffer[i] && buffer[i] != '\n')
 		i++;
-	if (!buffer[i])
+	if (!buffer[i]) // buffer update işlemini yaparken eğer EOF geldiysek NULL burada dönüyor
 	{
 		free(buffer);
 		return (NULL);
@@ -88,10 +80,10 @@ static char	*update_buffer(char *buffer)
 	new_buffer = ft_calloc(ft_strlen(buffer) - i + 1, sizeof(char));
 	if (!new_buffer)
 		return (NULL);
-	i++;
+	i++; // asıl başlangıç yerine geldik
 	j = 0;
 	while (buffer[i])
-		new_buffer[j++] = buffer[i++];
+		new_buffer[j++] = buffer[i++]; // buffer update işlemi
 	free(buffer);
 	return (new_buffer);
 }
