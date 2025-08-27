@@ -6,7 +6,7 @@
 /*   By: musakbul <musakbul@student.42istanbul.c    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/27 16:24:57 by musakbul          #+#    #+#             */
-/*   Updated: 2025/07/27 16:24:57 by musakbul         ###   ########.fr       */
+/*   Updated: 2025/08/27 14:16:23 by musakbul         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,9 +17,9 @@
 # include <stdlib.h>
 # include <stdio.h>
 
-#ifndef BUFFER_SIZE
-# define BUFFER_SIZE 3
-#endif
+# ifndef BUFFER_SIZE
+#  define BUFFER_SIZE 3
+# endif
 
 char	*get_next_line(int fd);
 char	*ft_strjoin(char const *s1, char const *s2);

@@ -6,7 +6,7 @@
 /*   By: musakbul <musakbul@student.42istanbul.c    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/27 16:24:54 by musakbul          #+#    #+#             */
-/*   Updated: 2025/08/23 13:35:52 by musakbul         ###   ########.fr       */
+/*   Updated: 2025/08/27 14:17:52 by musakbul         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,6 +28,7 @@ static char	*ft_read_and_append(int fd, char *buffer)
 		if (bytes_read == -1)
 		{
 			free(temp_buffer);
+			free(buffer);
 			return (NULL);
 		}
 		temp_buffer[bytes_read] = '\0';
@@ -79,7 +80,7 @@ static char	*ft_update_buffer(char *buffer)
 	}
 	new_buffer = ft_calloc(ft_strlen(buffer) - i + 1, sizeof(char));
 	if (!new_buffer)
-		return (NULL);
+		return (free(buffer), NULL);
 	i++; // asıl başlangıç yerine geldik
 	j = 0;
 	while (buffer[i])
@@ -100,6 +101,12 @@ char	*get_next_line(int fd)
 	buffer = ft_read_and_append(fd, buffer);
 	if (!buffer)
 		return (NULL);
+	if (ft_strlen(buffer) == 0)
+	{
+		free(buffer);
+		buffer = NULL;
+		return (NULL);
+	}
 	line = ft_extract_line(buffer);
 	buffer = ft_update_buffer(buffer);
 	return (line);
