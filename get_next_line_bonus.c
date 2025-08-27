@@ -1,16 +1,16 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   get_next_line.c                                    :+:      :+:    :+:   */
+/*   get_next_line_bonus.c                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: musakbul <musakbul@student.42istanbul.c    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/27 16:24:54 by musakbul          #+#    #+#             */
-/*   Updated: 2025/08/27 17:10:25 by musakbul         ###   ########.fr       */
+/*   Updated: 2025/08/27 17:17:17 by musakbul         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "get_next_line.h"
+#include "get_next_line_bonus.h"
 
 static size_t	ft_strlcpy(char *dest, const char *src, size_t size)
 {
@@ -104,23 +104,23 @@ static char	*ft_update_buffer(char *buffer)
 
 char	*get_next_line(int fd)
 {
-	static char	*buffer;
+	static char	*buffer[1024];
 	char		*line;
 
-	if (fd < 0 || BUFFER_SIZE <= 0)
+	if (fd < 0 || fd >= 1024 || BUFFER_SIZE <= 0)
 		return (NULL);
-	if (!buffer)
-		buffer = ft_calloc(1, 1);
-	buffer = ft_read_and_append(fd, buffer);
-	if (buffer == NULL)
+	if (!buffer[fd])
+		buffer[fd] = ft_calloc(1, 1);
+	buffer[fd] = ft_read_and_append(fd, buffer[fd]);
+	if (!buffer[fd])
 		return (NULL);
-	if (ft_strlen(buffer) == 0)
+	if (ft_strlen(buffer[fd]) == 0)
 	{
-		free(buffer);
-		buffer = NULL;
+		free(buffer[fd]);
+		buffer[fd] = NULL;
 		return (NULL);
 	}
-	line = ft_extract_line(buffer);
-	buffer = ft_update_buffer(buffer);
+	line = ft_extract_line(buffer[fd]);
+	buffer[fd] = ft_update_buffer(buffer[fd]);
 	return (line);
 }
