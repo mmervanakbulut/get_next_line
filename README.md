@@ -40,19 +40,65 @@ char *get_next_line(int fd);
 
 ## 🚀 Compilation & Usage
 
+### Mandatory Part
+
 ```bash
-# Compile with custom buffer size
-cc -Wall -Wextra -Werror -D BUFFER_SIZE=42 *.c
+# Compile mandatory version
+cc -Wall -Wextra -Werror -D BUFFER_SIZE=42 get_next_line.c get_next_line_utils.c main.c
 
 # Test with provided main
 ./a.out
+```
+
+### Bonus Part
+
+```bash
+# Compile bonus version (multiple file descriptors)
+cc -Wall -Wextra -Werror -D BUFFER_SIZE=42 get_next_line_bonus.c get_next_line_utils_bonus.c main.c
+
+# Test with multiple files
+./a.out
+```
+
+## 🎯 Bonus Features
+
+The bonus implementation adds support for **multiple file descriptors simultaneously**:
+
+### Key Differences in Bonus:
+
+```c
+// Mandatory: Single static buffer
+static char *buffer;
+
+// Bonus: Array of static buffers (one per fd)
+static char *buffer[1024];
+```
+
+### Bonus Capabilities:
+
+- **Multiple Files**: Read from different files concurrently
+- **State Preservation**: Each file descriptor maintains its own buffer
+- **Interleaved Reading**: Switch between files without losing position
+- **FD Limit**: Supports up to 1024 concurrent file descriptors
+
+### Example Usage:
+
+```c
+int fd1 = open("file1.txt", O_RDONLY);
+int fd2 = open("file2.txt", O_RDONLY);
+
+// Read alternately from both files
+char *line1 = get_next_line(fd1);  // "Hello from file1"
+char *line2 = get_next_line(fd2);  // "Hello from file2"
+char *line3 = get_next_line(fd1);  // "Second line from file1"
+char *line4 = get_next_line(fd2);  // "Second line from file2"
 ```
 
 ## 📊 Algorithm Flow
 
 ```
 1. Check if fd is valid and BUFFER_SIZE > 0
-2. Initialize static buffer if NULL
+2. Initialize static buffer[fd] if NULL
 3. ft_read_and_append(): Read chunks of BUFFER_SIZE bytes until newline
 4. ft_extract_line(): Extract one line from buffer (including \n)
 5. ft_update_buffer(): Remove extracted line, keep remainder
@@ -72,20 +118,29 @@ cc -Wall -Wextra -Werror -D BUFFER_SIZE=42 *.c
 
 - Finds newline position in buffer
 - Allocates memory for line (including newline)
-- Copies characters up to and including newline
+- Uses [`ft_strlcpy()`](get_next_line.c) for safe string copying
 - Returns the extracted line
 
 ### `ft_update_buffer()`
 
 - Removes the extracted line from buffer
 - Keeps remaining data after newline
+- Uses [`ft_strlcpy()`](get_next_line.c) for memory management
 - Frees old buffer, returns new buffer
 - Returns NULL if no data remains
 
-# Static Variables
+## 🧠 Static Variables Explained
+
+### Mandatory Version:
 
 ```c
-static char *buffer;  // Persists between function calls
+static char *buffer;  // Single buffer for one file
+```
+
+### Bonus Version:
+
+```c
+static char *buffer[1024];  // Array of buffers for multiple files
 ```
 
 | Memory Section   | Purpose                                       |
@@ -98,8 +153,8 @@ static char *buffer;  // Persists between function calls
 
 ## Where Does `static` Go?
 
-- It’s stored in the **data segment** (because it has an initial value of 0).
-- Because it’s `static`:  
+- It's stored in the **data segment** (because it has an initial value of 0).
+- Because it's `static`:  
    → It is **allocated only once** in memory.  
    → Every time the function is called, the same memory address is used.
 
@@ -123,15 +178,43 @@ Every time you call `my_function()`, the `counter` at address `0x100` is updated
   - Persist memory **without global scope**.
   - Avoid memory leaks by not needing `malloc/free`.
 
-# read from a file
+## 📖 Reading from Files
 
 ```c
 #include <unistd.h>
 ssize_t read(int fildes, void *buf, size_t nbyte);
 ```
 
-## return value
+### Return Value
 
 Upon successful completion, read() and pread() shall return a non-negative integer indicating the number of bytes actually read. Otherwise, the functions shall return -1 and set errno to indicate the error.
 
-- ulimit -n
+### File Descriptor Limits
+
+- **`ulimit -n`** - Shows the maximum number of open file descriptors
+- **Default limit**: Usually 1024 on most systems
+- **Bonus implementation**: Supports up to 1024 concurrent file descriptors
+
+## 🧪 Testing
+
+The project includes comprehensive testing:
+
+### Test Files:
+
+- [test.txt](test.txt) - Primary test file with multiple lines
+- [test2.txt](test2.txt) - Secondary test file for bonus testing
+
+### Current Test Output:
+
+```
+Hello World!
+burası
+This is line 2
+2.dosya
+Line 3 with some text
+abe
+Final line
+oldu mu ha
+```
+
+This demonstrates the bonus functionality reading alternately from both files while maintaining separate buffer states for each file descriptor.
