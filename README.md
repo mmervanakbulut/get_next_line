@@ -214,7 +214,7 @@ This is line 2
 Line 3 with some text
 abe
 Final line
-oldu mu ha
+oldu mu
 ```
 
 This demonstrates the bonus functionality reading alternately from both files while maintaining separate buffer states for each file descriptor.
