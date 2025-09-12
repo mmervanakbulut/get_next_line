@@ -32,7 +32,7 @@ static size_t	ft_strlcpy(char *dest, const char *src, size_t size)
 	return (len);
 }
 
-static char	*ft_read_and_append(int fd, char *buffer)
+static char	*read_and_append(int fd, char *buffer)
 {
 	char	*temp_buffer;
 	char	*new_buffer;
@@ -60,7 +60,7 @@ static char	*ft_read_and_append(int fd, char *buffer)
 	return (buffer);
 }
 
-static char	*ft_extract_line(char *buffer)
+static char	*extract_line(char *buffer)
 {
 	char	*line;
 	int		i;
@@ -77,7 +77,7 @@ static char	*ft_extract_line(char *buffer)
 	return (line);
 }
 
-static char	*ft_update_buffer(char *buffer)
+static char	*update_buffer(char *buffer)
 {
 	char	*new_buffer;
 	int		i;
@@ -111,7 +111,7 @@ char	*get_next_line(int fd)
 		return (NULL);
 	if (!buffer)
 		buffer = ft_calloc(1, 1);
-	buffer = ft_read_and_append(fd, buffer);
+	buffer = read_and_append(fd, buffer);
 	if (buffer == NULL)
 		return (NULL);
 	if (ft_strlen(buffer) == 0)
@@ -120,7 +120,7 @@ char	*get_next_line(int fd)
 		buffer = NULL;
 		return (NULL);
 	}
-	line = ft_extract_line(buffer);
-	buffer = ft_update_buffer(buffer);
+	line = extract_line(buffer);
+	buffer = update_buffer(buffer);
 	return (line);
 }
