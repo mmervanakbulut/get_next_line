@@ -42,22 +42,24 @@ char *get_next_line(int fd);
 
 ### Mandatory Part
 
+#### Compile mandatory version
 ```bash
-# Compile mandatory version
 cc -Wall -Wextra -Werror -D BUFFER_SIZE=42 get_next_line.c get_next_line_utils.c main.c
 ```
+#### Test with provided main
 ```bash
-# Test with provided main
 ./a.out
 ```
 
 ### Bonus Part
 
+#### Compile bonus version (multiple file descriptors)
 ```bash
-# Compile bonus version (multiple file descriptors)
 cc -Wall -Wextra -Werror -D BUFFER_SIZE=42 get_next_line_bonus.c get_next_line_utils_bonus.c main.c
+```
 
-# Test with multiple files
+#### Test with multiple files
+```bash
 ./a.out
 ```
 
