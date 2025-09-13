@@ -26,9 +26,9 @@ char *get_next_line(int fd);
 ### Core Functions ([get_next_line.c](get_next_line.c))
 
 - **`get_next_line(fd)`** - Main function that orchestrates the reading process
-- **`ft_read_and_append(fd, buffer)`** - Reads from file descriptor until newline or EOF
-- **`ft_extract_line(buffer)`** - Extracts current line from buffer
-- **`ft_update_buffer(buffer)`** - Updates buffer with remaining content after newline
+- **`read_and_append(fd, buffer)`** - Reads from file descriptor until newline or EOF
+- **`extract_line(buffer)`** - Extracts current line from buffer
+- **`update_buffer(buffer)`** - Updates buffer with remaining content after newline
 
 ### Utility Functions ([get_next_line_utils.c](get_next_line_utils.c))
 
@@ -110,21 +110,21 @@ char *line4 = get_next_line(fd2);  // "Second line from file2"
 
 ## 🔧 Function Details
 
-### `ft_read_and_append()`
+### `read_and_append()`
 
 - Reads from file descriptor in BUFFER_SIZE chunks
 - Concatenates data using [`ft_strjoin()`](get_next_line_utils.c)
 - Stops when newline is found or EOF reached
 - Returns updated buffer
 
-### `ft_extract_line()`
+### `extract_line()`
 
 - Finds newline position in buffer
 - Allocates memory for line (including newline)
 - Uses [`ft_strlcpy()`](get_next_line.c) for safe string copying
 - Returns the extracted line
 
-### `ft_update_buffer()`
+### `update_buffer()`
 
 - Removes the extracted line from buffer
 - Keeps remaining data after newline
