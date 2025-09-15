@@ -198,6 +198,19 @@ Upon successful completion, read() and pread() shall return a non-negative integ
 - **Default limit**: Usually 1024 on most systems
 - **Bonus implementation**: Supports up to 1024 concurrent file descriptors
 
+## If you do free(buffer);:
+
+- The allocated memory on the heap is released. This memory can now be used by other operations and is marked as free in memory.
+
+- buffer still points to the old address, but that address is now invalid (dangling pointer). Accessing it may cause undefined behavior (the program may crash or read/write incorrect data).
+
+- Correct usage:
+```c
+free(buffer); 
+buffer = NULL;
+```
+This way, the pointer no longer points to a valid address, reducing the risk of accidental use.
+
 ## 🧪 Testing
 
 The project includes comprehensive testing:
